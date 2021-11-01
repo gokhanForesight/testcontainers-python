@@ -1,15 +1,12 @@
 name: testcontainers-python
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6]
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -37,9 +34,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install wheel
           pip install -r requirements/${{ matrix.python-version }}.txt
+      - name: Install Thundra Python Agent
+        uses: thundra-io/thundra-foresight-python-action@action-experiment
+        with:
+          apikey: ${{ secrets.THUNDRA_APIKEY }}
+          project_id: ${{ secrets.THUNDRA_PROJECT_ID }}
       - name: Run checks
         run: |
           flake8
           sphinx-build -nW docs docs/_build/html
           py.test -sv --cov-config .coveragerc --cov-report html:skip-covered --cov-report term:skip-covered --cov=testcontainers --tb=short tests/
           codecov
+        env:
+          THUNDRA_AGENT_REPORT_REST_BASEURL: https://collector.thundra.me/v1
+          THUNDRA_AGENT_DEBUG_ENABLE: true
