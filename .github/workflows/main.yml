@@ -35,10 +35,11 @@ jobs:
           pip install wheel
           pip install -r requirements/${{ matrix.python-version }}.txt
       - name: Install Thundra Python Agent
-        uses: thundra-io/thundra-foresight-python-action@action-experiment
+        uses: thundra-io/thundra-foresight-python-action@python-action
         with:
           apikey: ${{ secrets.THUNDRA_APIKEY }}
           project_id: ${{ secrets.THUNDRA_PROJECT_ID }}
+          agent_version: 3.0.0
       - name: Run checks
         run: |
           flake8
