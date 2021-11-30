@@ -35,7 +35,7 @@ jobs:
           pip install wheel
           pip install -r requirements/${{ matrix.python-version }}.txt
       - name: Install Thundra Python Agent
-        uses: thundra-io/thundra-foresight-python-action@python-action
+        uses: thundra-io/thundra-foresight-python-action@v1
         with:
           apikey: ${{ secrets.THUNDRA_APIKEY }}
           project_id: ${{ secrets.THUNDRA_PROJECT_ID }}
